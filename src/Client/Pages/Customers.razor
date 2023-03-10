@@ -1,0 +1,110 @@
+@page "/customers"
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject DialogService DialogService
+@inject ContextMenuService ContextMenuService
+@inject TooltipService TooltipService
+@inject NotificationService NotificationService
+
+@inject DDDCustomerDbService DDDCustomerDbService
+
+<PageTitle>Customers</PageTitle>
+<div class="row" style="margin-bottom: 1rem">
+    <div class="col-12 col-md-6">
+        <RadzenText Text="Customers" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+    </div>
+    <div class="col-12 col-md-6 justify-content-start justify-content-md-end" style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem">
+    <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"  AllowFiltering="false" FilterMode="FilterMode.Advanced" AllowPaging="false" AllowSorting="false"
+            Data="@customers" Count=count LoadData=@Grid0LoadData  TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" RowSelect="@EditRow" >
+            <Columns>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="CustomerId" Title="Customer Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="CustomerNumber" Title="Customer Number">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="FirstName" Title="First Name">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="LastName" Title="Last Name">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="CreditLimit" Title="Credit Limit">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="PhoneNumber" Title="Phone Number">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="DateCreated" Title="Date Created">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="IsActive" Title="Is Active">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Property="IsDeleted" Title="Is Deleted">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="customer">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, customer)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+</div>
+@code {
+
+    protected IEnumerable<DDDCustomerUi.Server.Models.DDDCustomerDb.Customer> customers;
+
+    protected RadzenDataGrid<DDDCustomerUi.Server.Models.DDDCustomerDb.Customer> grid0;
+    protected int count;
+
+    protected async Task Grid0LoadData(LoadDataArgs args)
+    {
+        try
+        {
+            var result = await DDDCustomerDbService.GetCustomers(filter: $"{args.Filter}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
+            customers = result.Value.AsODataEnumerable();
+            count = result.Count;
+        }
+        catch (System.Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Customers" });
+        }
+    }    
+
+    protected async Task AddButtonClick(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo("add-customer");
+    }
+
+    protected async Task EditRow(DDDCustomerUi.Server.Models.DDDCustomerDb.Customer args)
+    {
+        NavigationManager.NavigateTo($"edit-customer/{args.CustomerId}");
+    }
+
+    protected async Task GridDeleteButtonClick(MouseEventArgs args, DDDCustomerUi.Server.Models.DDDCustomerDb.Customer customer)
+    {
+        try
+        {
+            if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+            {
+                var deleteResult = await DDDCustomerDbService.DeleteCustomer(customerId:customer.CustomerId);
+
+                if (deleteResult != null)
+                {
+                    await grid0.Reload();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage
+            { 
+                Severity = NotificationSeverity.Error,
+                Summary = $"Error", 
+                Detail = $"Unable to delete Customer" 
+            });
+        }
+    }
+}

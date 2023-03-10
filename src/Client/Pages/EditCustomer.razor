@@ -1,0 +1,124 @@
+@page "/edit-customer/{CustomerId:guid}"
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject DialogService DialogService
+@inject ContextMenuService ContextMenuService
+@inject TooltipService TooltipService
+@inject NotificationService NotificationService
+
+@inject DDDCustomerDbService DDDCustomerDbService
+
+<PageTitle>Edit Customer</PageTitle>
+    <div class="col-md-12">
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Customer</RadzenAlert>
+        <RadzenTemplateForm TItem="DDDCustomerUi.Server.Models.DDDCustomerDb.Customer" Data="@customer" Visible="@(customer != null)" Submit="@FormSubmit">
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Customer Number" Component="CustomerNumber" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@customer.CustomerNumber" Name="CustomerNumber" />
+                    <RadzenRequiredValidator Component="CustomerNumber" Text="CustomerNumber is required" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="First Name" Component="FirstName" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@customer.FirstName" Name="FirstName" />
+                    <RadzenRequiredValidator Component="FirstName" Text="FirstName is required" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Last Name" Component="LastName" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@customer.LastName" Name="LastName" />
+                    <RadzenRequiredValidator Component="LastName" Text="LastName is required" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Credit Limit" Component="CreditLimit" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@customer.CreditLimit" Name="CreditLimit" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Phone Number" Component="PhoneNumber" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@customer.PhoneNumber" Name="PhoneNumber" />
+                    <RadzenRequiredValidator Component="PhoneNumber" Text="PhoneNumber is required" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Date Created" Component="DateCreated" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@customer.DateCreated" Name="DateCreated" />
+                    <RadzenRequiredValidator Component="DateCreated" Text="DateCreated is required" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Is Active" Component="IsActive" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenCheckBox @bind-Value="@customer.IsActive" Name="IsActive" />
+                    <RadzenRequiredValidator Component="IsActive" Text="IsActive is required" />
+                </div>
+            </div>
+            <div style="margin-bottom: 1rem" class="row">
+                <div class="col-md-3">
+                    <RadzenLabel Text="Is Deleted" Component="IsDeleted" style="width: 100%" />
+                </div>
+                <div class="col-md-9">
+                    <RadzenCheckBox @bind-Value="@customer.IsDeleted" Name="IsDeleted" />
+                    <RadzenRequiredValidator Component="IsDeleted" Text="IsDeleted is required" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col d-flex justify-content-end" style="margin-top: 1rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Style="margin-right: 0.5rem" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    </div>
+
+@code {
+
+    [Parameter]
+    public Guid CustomerId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await DDDCustomerDbService.GetCustomerByCustomerId(customerId:CustomerId);
+    }
+    protected bool errorVisible;
+    protected DDDCustomerUi.Server.Models.DDDCustomerDb.Customer customer;
+
+    protected async Task FormSubmit()
+    {
+        try
+        {
+            await DDDCustomerDbService.UpdateCustomer(customerId:CustomerId, customer);
+            NavigationManager.NavigateTo("customers");
+        }
+        catch (Exception ex)
+        {
+            errorVisible = true;
+        }
+    }
+
+    protected async Task CancelButtonClick(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo("customers");
+    }
+}

@@ -20,6 +20,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace DDDCustomer.Presentation
 {
+
     public class Startup
     {
         public const string CORS_POLICY = "CorsPolicy";

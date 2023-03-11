@@ -2,6 +2,7 @@ using AutoMapper;
 using BlazorShared.Models.Customer;
 using DDDCustomer.Domain.Entities;
 using DDDCustomer.Domain.ModelsDto;
+using DDDCustomer.Presentation.CustomerAggregate.Endpoints_MediatR;
 
 namespace DDDCustomer.Api.MappingProfiles
 {
@@ -14,6 +15,7 @@ namespace DDDCustomer.Api.MappingProfiles
             CreateMap<CreateCustomerRequest, Customer>();
             CreateMap<UpdateCustomerRequest, Customer>();
             CreateMap<DeleteCustomerRequest, Customer>();
+            CreateMap<UpdateCustomerRequestM, Customer>();
         }
     }
 }

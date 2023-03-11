@@ -22,12 +22,6 @@ namespace DDDCustomer.Presentation.CustomerAggregate.Endpoints_MediatR
 
         public async Task<UpdateCustomerResponseM> Handle(UpdateCustomerRequestM request, CancellationToken cancellationToken)
         {
-            //var customer = await _repository.GetByIdAsync(request.CustomerId, cancellationToken);
-
-            //if (customer == null)
-            //{
-            //    throw new KeyNotFoundException($"Customer with ID {request.CustomerId} not found.");
-            //}
 
 
             var cusToUpdate = _mapper.Map<Customer>(request);

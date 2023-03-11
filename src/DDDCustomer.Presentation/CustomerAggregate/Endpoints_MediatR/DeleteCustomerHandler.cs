@@ -30,9 +30,6 @@ namespace DDDCustomer.Presentation.CustomerAggregate.Endpoints_MediatR
             return Unit.Value;
         }
 
-        //public Task<Unit> Handle(DeleteCustomerRequestM request, CancellationToken cancellationToken)
-        //{
-        //    return null;
-        //}
+
     }
 }

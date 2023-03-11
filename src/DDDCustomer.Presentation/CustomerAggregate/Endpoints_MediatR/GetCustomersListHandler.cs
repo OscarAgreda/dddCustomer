@@ -35,9 +35,6 @@ namespace DDDCustomer.Presentation.CustomerAggregate.Endpoints_MediatR
             return response;
         }
 
-        //public Task<GetCustomersListResponseM> Handle(GetCustomersListRequestM request, CancellationToken cancellationToken)
-        //{
-        //    return null;
-        //}
+
     }
 }

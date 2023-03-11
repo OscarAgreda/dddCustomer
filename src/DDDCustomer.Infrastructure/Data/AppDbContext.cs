@@ -8,6 +8,21 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
+// -c	The DbContext class to use. Class name only or fully qualified with namespaces. If this option is omitted, EF Core will find the context class. If there are multiple context classes, this option is required.
+// -p	Relative path to the project folder of the target project. Default value is the current folder.
+// -s	Relative path to the project folder of the startup project. Default value is the current folder.
+// -o	The directory to put files in. Paths are relative to the project directory.
+
+
+// to drop the database
+// dotnet ef database drop -c appdbcontext -p ../DDDCustomer.Infrastructure/DDDCustomer.Infrastructure.csproj -f -v
+
+// dotnet ef migrations add initialDDDCustomerAppMigration -c appdbcontext -p ../DDDCustomer.Infrastructure/DDDCustomer.Infrastructure.csproj -s DDDCustomer.Api.csproj -o Data/Migrations
+
+// dotnet ef database update -c appdbcontext --project ../DDDCustomer.Infrastructure/DDDCustomer.Infrastructure.csproj -s DDDCustomer.Api.csproj
+
+// then look at AppDbContextSeed
+
 
 namespace DDDCustomer.Infrastructure.Data
 {

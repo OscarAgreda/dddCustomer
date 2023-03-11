@@ -8,6 +8,9 @@ namespace DDDCustomer.Domain.ModelsDto
     {
         public CustomerDto() { }
 
+
+
+
         public CustomerDto(
             Guid customerId,
             int customerNumber,

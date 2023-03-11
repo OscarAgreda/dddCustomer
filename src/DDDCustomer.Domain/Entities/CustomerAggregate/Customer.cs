@@ -11,7 +11,9 @@ namespace DDDCustomer.Domain.Entities
     {
         private Customer() { }
 
-        [SetsRequiredMembers]
+
+
+
         public Customer(
             Guid customerId,
             int customerNumber,
@@ -23,6 +25,8 @@ namespace DDDCustomer.Domain.Entities
             bool isActive,
             bool isDeleted)
         {
+
+
             CustomerId = Guard.Against.NullOrEmpty(customerId, nameof(customerId));
             CustomerNumber = Guard.Against.NegativeOrZero(customerNumber, nameof(customerNumber));
             FirstName = Guard.Against.NullOrWhiteSpace(firstName, nameof(firstName));
@@ -32,6 +36,8 @@ namespace DDDCustomer.Domain.Entities
             DateCreated = Guard.Against.OutOfSQLDateRange(dateCreated, nameof(dateCreated));
             IsActive = Guard.Against.Null(isActive, nameof(isActive));
             IsDeleted = Guard.Against.Null(isDeleted, nameof(isDeleted));
+
+
         }
 
         [Key] public Guid CustomerId { get; private set; }

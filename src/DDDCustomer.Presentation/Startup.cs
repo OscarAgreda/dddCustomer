@@ -124,7 +124,7 @@ namespace DDDCustomer.Presentation
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "DDDCustomer V1");
                     c.RoutePrefix = string.Empty;
                     c.DocExpansion(DocExpansion.None);
-                    c.EnableFilter("Customer");
+                    // c.EnableFilter("Customer");
                     c.EnableTryItOutByDefault();
                 });
             }

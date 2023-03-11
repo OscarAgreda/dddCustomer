@@ -98,7 +98,7 @@ namespace DDDCustomer.Presentation.CustomerAggregate.Endpoints_MediatR
         }
 
         [HttpGet]
-        // [HttpGet("api/customersm3")]
+
         [SwaggerOperation(
             Summary = "Get a list of Customers",
             Description = "Gets a list of Customers",

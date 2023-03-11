@@ -48,6 +48,23 @@ namespace DDDCustomer.Api.CustomerEndpoints
             CancellationToken cancellationToken)
         {
             var response = new CreateCustomerResponse(request.CorrelationId());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             var newCustomer = new Customer(
                 Guid.NewGuid(),
                 request.CustomerNumber,
@@ -59,6 +76,20 @@ namespace DDDCustomer.Api.CustomerEndpoints
                 request.IsActive,
                 request.IsDeleted
             );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             await _repository.AddAsync(newCustomer);
             _logger.LogInformation(
                 $"Customer created  with Id {newCustomer.CustomerId.ToString("D", CultureInfo.InvariantCulture)}");

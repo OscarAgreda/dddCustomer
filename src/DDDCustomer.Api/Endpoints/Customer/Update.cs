@@ -56,9 +56,16 @@ namespace BusinessManagement.Api.CustomerEndpoints
             CancellationToken cancellationToken)
         {
             var response = new UpdateCustomerResponse(request.CorrelationId());
+
+
             var cusToUpdate = _mapper.Map<Customer>(request);
             await _repository.UpdateAsync(cusToUpdate);
+
+
             var dto = _mapper.Map<CustomerDto>(cusToUpdate);
+
+
+
             response.Customer = dto;
             return Ok(response);
         }
